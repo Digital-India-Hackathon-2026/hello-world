@@ -2,7 +2,7 @@ const hre = require("hardhat");
 
 const DEMO_PARCELS = [
   {
-    ownerIndex: 1,
+    ownerIndex: 0,
     surveyNumber: "142/2A",
     district: "Medak",
     geo: "17.75,78.05",
@@ -11,7 +11,7 @@ const DEMO_PARCELS = [
     ulpin: "29KA0482017452",
   },
   {
-    ownerIndex: 2,
+    ownerIndex: 0,
     surveyNumber: "89/B",
     district: "Pune",
     geo: "18.52,73.85",
@@ -20,7 +20,7 @@ const DEMO_PARCELS = [
     ulpin: "27MH1234056789",
   },
   {
-    ownerIndex: 3,
+    ownerIndex: 0,
     surveyNumber: "145/1",
     district: "Medak",
     geo: "17.76,78.06",
@@ -65,9 +65,6 @@ async function main() {
 
   console.log("\nDemo wallets:");
   console.log("Registrar/Admin:", deployer.address);
-  console.log("Seller:", seller.address);
-  console.log("Buyer:", buyer.address);
-  console.log("Owner3:", owner3.address);
   console.log("\nParcel mapping:", JSON.stringify(parcelIds));
 }
 
