@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -11,58 +11,57 @@ model User {
   id        String   @id @default(cuid())
   wallet    String   @unique
   name      String
-  maskedId  String? // "XXXX-XXXX-1234" Aadhaar-style, mocked
-  role      Role     @default(CITIZEN)
+  maskedId  String?
+  role      String   @default("CITIZEN")
   createdAt DateTime @default(now())
 }
 
-enum Role {
-  CITIZEN
-  REGISTRAR
-  ADMIN
-}
-
 model ParcelMeta {
-  id           Int        @id // == on-chain parcelId
+  id           Int        @id
+  ulpin        String?    @unique
   surveyNumber String
   district     String
   addressText  String
   lat          Float
   lng          Float
   area         Int
+  ownerWallet  String     @default("")
   currentDocId String?
   createdAt    DateTime   @default(now())
   documents    Document[]
+  fraudAlerts  FraudAlert[]
 }
 
 model Document {
   id         String     @id @default(cuid())
   parcelId   Int
   parcel     ParcelMeta @relation(fields: [parcelId], references: [id])
-  storageUrl String // Supabase Storage
+  storageUrl String
   sha256     String
-  aiReport   Json? // { riskScore, verdict, reasons[], model }
+  aiReport   String?
   uploadedBy String
   createdAt  DateTime   @default(now())
 }
 
 model TransferMeta {
-  id        Int      @id // == on-chain transferId
-  parcelId  Int
-  seller    String
-  buyer     String
-  status    String
-  createdAt DateTime @default(now())
+  id              Int      @id
+  parcelId        Int
+  seller          String
+  buyer           String
+  status          String
+  newDocumentHash String?
+  createdAt       DateTime @default(now())
 }
 
 model FraudAlert {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   parcelId  Int
-  type      String // DOUBLE_SALE | OWNERSHIP_MISMATCH | RAPID_FLIP | FORGED_DOC
-  severity  String // LOW | MED | HIGH
+  parcel    ParcelMeta @relation(fields: [parcelId], references: [id])
+  type      String
+  severity  String
   detail    String
-  resolved  Boolean  @default(false)
-  createdAt DateTime @default(now())
+  resolved  Boolean    @default(false)
+  createdAt DateTime   @default(now())
 }
 
 model AuditLog {
@@ -70,6 +69,41 @@ model AuditLog {
   actor     String
   action    String
   target    String
-  meta      Json?
+  meta      String?
   createdAt DateTime @default(now())
+}
+
+model ChainEvent {
+  id        String   @id @default(cuid())
+  parcelId  Int?
+  transferId Int?
+  type      String
+  fromAddr  String?
+  toAddr    String?
+  txHash    String
+  blockNum  Int
+  at        Int
+  createdAt DateTime @default(now())
+}
+
+model SimParcel {
+  id            Int    @id
+  surveyNumber  String
+  district      String
+  geo           String
+  area          Int
+  documentHash  String
+  registeredAt  Int
+  status        String
+  ownerWallet   String
+}
+
+model SimTransfer {
+  id              Int    @id
+  parcelId        Int
+  seller          String
+  buyer           String
+  newDocumentHash String
+  status          String
+  createdAt       Int
 }
