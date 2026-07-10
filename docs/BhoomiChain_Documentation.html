@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BhoomiChain — Complete Project Documentation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    :root {
+      --navy: #0c1b3a;
+      --blue: #1a56db;
+      --blue-light: #e8f0fe;
+      --green: #047857;
+      --green-light: #d1fae5;
+      --orange: #ea580c;
+      --orange-light: #fff7ed;
+      --red: #dc2626;
+      --red-light: #fef2f2;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --gray-600: #475569;
+      --gray-800: #1e293b;
+      --saffron: #FF9933;
+      --white-chakra: #FFFFFF;
+      --india-green: #138808;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--gray-800);
+      line-height: 1.7;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    @media print {
+      body { font-size: 11px; }
+      .page-break { page-break-before: always; }
+      .no-print { display: none; }
+      section { page-break-inside: avoid; }
+    }
+
+    .cover {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy) 0%, #1e3a6e 50%, var(--blue) 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -30%;
+      width: 80%;
+      height: 150%;
+      background: radial-gradient(circle, rgba(255,153,51,0.08) 0%, transparent 70%);
+    }
+
+    .cover .tricolor {
+      display: flex;
+      gap: 0;
+      margin-bottom: 2rem;
+    }
+    .cover .tricolor span {
+      width: 60px;
+      height: 6px;
+      border-radius: 3px;
+    }
+    .cover .tricolor .saffron { background: var(--saffron); }
+    .cover .tricolor .white { background: var(--white-chakra); }
+    .cover .tricolor .green { background: var(--india-green); }
+
+    .cover h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
+    }
+    .cover .hindi { font-size: 1.8rem; font-weight: 300; opacity: 0.7; margin-bottom: 1.5rem; }
+    .cover .tagline { font-size: 1.1rem; opacity: 0.85; max-width: 600px; margin-bottom: 3rem; }
+    .cover .meta { font-size: 0.85rem; opacity: 0.5; }
+    .cover .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+      border-bottom: 3px solid var(--blue);
+      padding-bottom: 0.5rem;
+      display: inline-block;
+    }
+    h2 .num { color: var(--blue); margin-right: 0.5rem; }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin: 1rem 0 0.3rem;
+    }
+
+    p { margin-bottom: 0.8rem; color: var(--gray-600); }
+
+    .section { margin-bottom: 3rem; }
+
+    .card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .card-blue { background: var(--blue-light); border-color: #bfdbfe; }
+    .card-green { background: var(--green-light); border-color: #a7f3d0; }
+    .card-orange { background: var(--orange-light); border-color: #fed7aa; }
+    .card-red { background: var(--red-light); border-color: #fecaca; }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+      margin-bottom: 0.3rem;
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .stack-item {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+    }
+    .stack-item .emoji { font-size: 1.8rem; margin-bottom: 0.3rem; }
+    .stack-item .name { font-weight: 700; color: var(--navy); font-size: 0.9rem; }
+    .stack-item .desc { font-size: 0.75rem; color: var(--gray-400); margin-top: 0.2rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    thead th {
+      background: var(--navy);
+      color: white;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    tbody td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    tbody tr:nth-child(even) { background: var(--gray-50); }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--gray-100);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--blue);
+    }
+
+    .code-block {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--navy);
+      color: #e2e8f0;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      line-height: 1.6;
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin: 0.8rem 0;
+    }
+    .flow-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .flow-content { flex: 1; }
+
+    .highlight { background: #fef9c3; padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+    .toc a {
+      display: block;
+      padding: 0.3rem 0;
+      color: var(--gray-600);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--gray-200);
+    }
+    .toc a:hover { color: var(--blue); }
+    .toc a .num { color: var(--blue); font-weight: 600; margin-right: 0.5rem; }
+
+    ul { padding-left: 1.5rem; margin-bottom: 0.8rem; }
+    li { margin-bottom: 0.3rem; color: var(--gray-600); }
+
+    .badge-sm {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-blue { background: var(--blue-light); color: var(--blue); }
+    .badge-green { background: var(--green-light); color: var(--green); }
+    .badge-orange { background: var(--orange-light); color: var(--orange); }
+    .badge-red { background: var(--red-light); color: var(--red); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .footer-doc {
+      text-align: center;
+      padding: 2rem;
+      color: var(--gray-400);
+      font-size: 0.75rem;
+      border-top: 1px solid var(--gray-200);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================== COVER PAGE ============================== -->
+<div class="cover">
+  <div class="tricolor">
+    <span class="saffron"></span>
+    <span class="white"></span>
+    <span class="green"></span>
+  </div>
+  <div class="badge">Digital India Hackathon 2026</div>
+  <h1>BhoomiChain</h1>
+  <p class="hindi">भूमि चैन</p>
+  <p class="tagline">
+    A blockchain-powered land registry system that makes property ownership transparent, 
+    tamper-proof, and instantly verifiable — replacing decades of paper-based corruption 
+    with cryptographic certainty.
+  </p>
+  <p class="meta">Complete Technical Documentation · v1.0 · July 2026</p>
+</div>
+
+<!-- ============================== TABLE OF CONTENTS ============================== -->
+<div class="container page-break">
+  <div class="section">
+    <h2>📑 Table of Contents</h2>
+    <div class="toc" style="margin-top: 1rem;">
+      <a href="#s1"><span class="num">01</span> What is BhoomiChain? (The Problem & Solution)</a>
+      <a href="#s2"><span class="num">02</span> Technology Stack (Every Tool We Use)</a>
+      <a href="#s3"><span class="num">03</span> Architecture Overview (How It All Connects)</a>
+      <a href="#s4"><span class="num">04</span> The Smart Contract (Blockchain Brain)</a>
+      <a href="#s5"><span class="num">05</span> Database Schema (What We Store)</a>
+      <a href="#s6"><span class="num">06</span> The Simulator (Demo Without a Blockchain Node)</a>
+      <a href="#s7"><span class="num">07</span> API Reference (All Backend Endpoints)</a>
+      <a href="#s8"><span class="num">08</span> Key Library Functions</a>
+      <a href="#s9"><span class="num">09</span> UI Navigation Guide (Every Page Explained)</a>
+      <a href="#s10"><span class="num">10</span> The Complete Transfer Workflow</a>
+      <a href="#s11"><span class="num">11</span> Security & Fraud Detection</a>
+      <a href="#s12"><span class="num">12</span> AI Document Verification</a>
+      <a href="#s13"><span class="num">13</span> Environment Variables</a>
+      <a href="#s14"><span class="num">14</span> Folder Structure</a>
+      <a href="#s15"><span class="num">15</span> Glossary of Terms</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 1 ============================== -->
+<div class="container page-break" id="s1">
+  <div class="section">
+    <h2><span class="num">01</span> What is BhoomiChain?</h2>
+
+    <h3>🔴 The Problem</h3>
+    <p>In India, land ownership records are still maintained on paper in many states. This leads to:</p>
+    <ul>
+      <li><strong>Forged documents</strong> — criminals photoshop land title deeds to steal property</li>
+      <li><strong>Double-selling</strong> — the same plot is sold to two different buyers simultaneously</li>
+      <li><strong>Ownership disputes</strong> — decades of unclear, contradictory records</li>
+      <li><strong>Corruption</strong> — government officials can tamper with registry books</li>
+    </ul>
+
+    <h3>🟢 Our Solution</h3>
+    <p>BhoomiChain replaces the paper registry with a <strong>blockchain-backed digital system</strong> where:</p>
+    <ul>
+      <li>Every land parcel is represented as an <strong>NFT (Non-Fungible Token)</strong> on the Ethereum blockchain</li>
+      <li>Ownership is <strong>cryptographically proven</strong> — no one can forge it</li>
+      <li>Transfers require <strong>three-party approval</strong> (seller + buyer + government registrar)</li>
+      <li>An <strong>AI engine</strong> scans uploaded documents for signs of forgery before approval</li>
+      <li>Anyone can <strong>publicly verify</strong> who owns any piece of land, instantly</li>
+    </ul>
+
+    <div class="card card-green">
+      <div class="card-title">💡 The Core Idea in One Sentence</div>
+      <p style="margin:0">Each piece of land becomes an NFT. Whoever holds the NFT on the blockchain is the legal owner. Transferring land means transferring the NFT — but only after the seller, buyer, and government all approve.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 2 ============================== -->
+<div class="container page-break" id="s2">
+  <div class="section">
+    <h2><span class="num">02</span> Technology Stack</h2>
+    <p>Here is every technology, framework, and tool used in BhoomiChain:</p>
+
+    <h3>⛓️ Blockchain Layer</h3>
+    <div class="stack-grid">
+      <div class="stack-item">
+        <div class="emoji">📜</div>
+        <div class="name">Solidity</div>
+        <div class="desc">The programming language for writing smart contracts on Ethereum</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">⛑️</div>
+        <div class="name">Hardhat</div>
+        <div class="desc">Development toolkit — compiles, tests, and deploys contracts. Runs a local blockchain node for testing</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">🔒</div>
+        <div class="name">OpenZeppelin</div>
+        <div class="desc">Pre-audited, battle-tested smart contract libraries. We use ERC-721 (NFT) + AccessControl (roles)</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">🔗</div>
+        <div class="name">ethers.js v6</div>
+        <div class="desc">JavaScript library to talk to the blockchain from our web app. Reads data, sends transactions</div>
+      </div>
+    </div>
+
+    <h3>🌐 Frontend Layer</h3>
+    <div class="stack-grid">
+      <div class="stack-item">
+        <div class="emoji">⚛️</div>
+        <div class="name">Next.js 14</div>
+        <div class="desc">React-based full-stack framework. Handles both the UI pages and the backend API routes in one project</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">🎨</div>
+        <div class="name">Tailwind CSS</div>
+        <div class="desc">Utility-first CSS framework. Write styles directly in HTML classes instead of separate CSS files</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">🦊</div>
+        <div class="name">MetaMask</div>
+        <div class="desc">Browser extension wallet. Users connect it to sign blockchain transactions</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">🎬</div>
+        <div class="name">Framer Motion</div>
+        <div class="desc">Animation library for smooth page transitions and micro-interactions</div>
+      </div>
+    </div>
+
+    <h3>🗄️ Backend & Database Layer</h3>
+    <div class="stack-grid">
+      <div class="stack-item">
+        <div class="emoji">🗃️</div>
+        <div class="name">Prisma ORM</div>
+        <div class="desc">Type-safe database toolkit. Lets us write database queries in TypeScript instead of raw SQL</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">💾</div>
+        <div class="name">SQLite</div>
+        <div class="desc">Lightweight file-based database. No server needed — the entire DB is a single file on disk</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">☁️</div>
+        <div class="name">Supabase</div>
+        <div class="desc">Cloud storage for uploaded land documents (PDFs, images). Also provides authentication</div>
+      </div>
+      <div class="stack-item">
+        <div class="emoji">🤖</div>
+        <div class="name">AI (Heuristic)</div>
+        <div class="desc">Document forensics engine that analyzes uploaded deeds for signs of tampering/forgery</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 3 ============================== -->
+<div class="container page-break" id="s3">
+  <div class="section">
+    <h2><span class="num">03</span> Architecture Overview</h2>
+    <p>BhoomiChain has a <strong>dual-layer architecture</strong>. Think of it like having two record books that always stay in sync:</p>
+
+    <div class="two-col">
+      <div class="card card-blue">
+        <div class="card-title">⛓️ Layer 1: The Blockchain (Source of Truth)</div>
+        <p style="margin:0; font-size: 0.85rem;">This is the <strong>unbreakable</strong> record. The smart contract on the blockchain stores WHO owns WHAT. Nobody can change it without proper authorization. It's slow but 100% tamper-proof.</p>
+      </div>
+      <div class="card card-green">
+        <div class="card-title">💾 Layer 2: The Database (Fast Mirror)</div>
+        <p style="margin:0; font-size: 0.85rem;">The SQLite database is a <strong>fast copy</strong> of the blockchain data. It stores extra details (addresses, coordinates, documents) that would be too expensive to store on-chain. The UI reads from here for speed.</p>
+      </div>
+    </div>
+
+    <h3>How They Stay in Sync</h3>
+    <div class="card">
+      <p style="margin:0">When something happens on the blockchain (e.g., a parcel is registered), the <strong>Simulator</strong> (or Indexer in production) automatically writes the same data into the SQLite database. This way, the website loads instantly from the database, but the blockchain remains the ultimate authority.</p>
+    </div>
+
+    <h3>The Simulator — Our Secret Weapon for Demos</h3>
+    <p>Instead of requiring a live Hardhat blockchain node running (which can crash during a demo), Dev B built a <strong>Simulator</strong> that mimics the blockchain entirely inside SQLite tables (<code>SimParcel</code>, <code>SimTransfer</code>, <code>ChainEvent</code>). When judges visit the app, everything "just works" without needing to start any blockchain software.</p>
+  </div>
+</div>
+
+<!-- ============================== SECTION 4 ============================== -->
+<div class="container page-break" id="s4">
+  <div class="section">
+    <h2><span class="num">04</span> The Smart Contract</h2>
+    <p>The file <code>contracts/contracts/LandRegistry.sol</code> is the blockchain brain. Here's what it does:</p>
+
+    <h3>What is an NFT in Our Context?</h3>
+    <p>Each land parcel is minted as an <strong>ERC-721 NFT</strong> (Non-Fungible Token). The token ID = the parcel ID. Whoever "holds" the token on the blockchain is the legal owner. You cannot copy, duplicate, or forge an NFT — the blockchain guarantees uniqueness.</p>
+
+    <h3>Roles (Who Can Do What)</h3>
+    <table>
+      <thead><tr><th>Role</th><th>Who</th><th>Powers</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge-sm badge-blue">DEFAULT_ADMIN</span></td><td>Government Admin (deployer)</td><td>Grant/revoke registrar roles</td></tr>
+        <tr><td><span class="badge-sm badge-green">REGISTRAR_ROLE</span></td><td>Government Registrar</td><td>Register new parcels, finalize transfers</td></tr>
+        <tr><td><span class="badge-sm badge-orange">Owner (NFT holder)</span></td><td>Citizen who owns land</td><td>Initiate transfers of their own parcels</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Data Structures Stored On-Chain</h3>
+    <div class="card">
+      <div class="card-title">Parcel (Land Record)</div>
+      <p style="font-size:0.85rem; margin:0"><code>id</code> (unique number) · <code>surveyNumber</code> (e.g., "142/2A") · <code>district</code> (e.g., "Pune") · <code>geo</code> (latitude,longitude) · <code>area</code> (square feet) · <code>documentHash</code> (SHA-256 fingerprint of the title deed PDF) · <code>registeredAt</code> (timestamp) · <code>status</code> (Active or InTransfer)</p>
+    </div>
+    <div class="card">
+      <div class="card-title">TransferRequest (Ownership Change Request)</div>
+      <p style="font-size:0.85rem; margin:0"><code>parcelId</code> · <code>seller</code> · <code>buyer</code> · <code>newDocumentHash</code> · <code>sellerApproved</code> · <code>buyerApproved</code> · <code>registrarApproved</code> · <code>status</code> (PendingBuyer → PendingRegistrar → Completed/Rejected) · <code>createdAt</code></p>
+    </div>
+
+    <h3>Smart Contract Functions</h3>
+    <table>
+      <thead><tr><th>Function</th><th>Who Can Call</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><code>registerParcel()</code></td><td>Registrar only</td><td>Creates a new land NFT and assigns it to an owner</td></tr>
+        <tr><td><code>initiateTransfer()</code></td><td>Current owner only</td><td>Starts a sale request. Locks the parcel (status → InTransfer)</td></tr>
+        <tr><td><code>buyerApprove()</code></td><td>Designated buyer only</td><td>Buyer agrees to purchase. Status moves to PendingRegistrar</td></tr>
+        <tr><td><code>registrarFinalize()</code></td><td>Registrar only</td><td>Government approves. NFT is transferred to buyer. Done!</td></tr>
+        <tr><td><code>rejectTransfer()</code></td><td>Buyer, seller, or registrar</td><td>Cancels the transfer. Parcel goes back to Active</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Events (Blockchain Notifications)</h3>
+    <p>Every time something happens on the contract, it emits an <strong>Event</strong> — a permanent log entry on the blockchain that anyone can read:</p>
+    <ul>
+      <li><code>ParcelRegistered</code> — a new land parcel was created</li>
+      <li><code>TransferInitiated</code> — seller started a sale</li>
+      <li><code>TransferApproved</code> — someone (seller/buyer/registrar) approved</li>
+      <li><code>TransferCompleted</code> — ownership officially changed</li>
+      <li><code>TransferRejected</code> — transfer was cancelled with a reason</li>
+    </ul>
+
+    <div class="card card-red">
+      <div class="card-title">🔒 Anti-Theft Protection</div>
+      <p style="margin:0; font-size:0.85rem">The standard ERC-721 <code>transferFrom()</code> and <code>safeTransferFrom()</code> functions are <strong>permanently disabled</strong> (they revert with "Use transfer workflow"). This means nobody can bypass the 3-party approval system and just steal someone's land NFT.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 5 ============================== -->
+<div class="container page-break" id="s5">
+  <div class="section">
+    <h2><span class="num">05</span> Database Schema</h2>
+    <p>The database (<code>web/prisma/schema.prisma</code>) stores fast-access data that supplements the blockchain. Here are all the tables:</p>
+
+    <table>
+      <thead><tr><th>Table</th><th>Purpose</th><th>Key Fields</th></tr></thead>
+      <tbody>
+        <tr><td><strong>User</strong></td><td>Registered citizens & registrars</td><td>wallet, name, maskedId (Aadhaar-style), role</td></tr>
+        <tr><td><strong>ParcelMeta</strong></td><td>Rich metadata for each land parcel</td><td>id (=on-chain parcelId), ulpin, surveyNumber, district, lat, lng, area, ownerWallet</td></tr>
+        <tr><td><strong>Document</strong></td><td>Uploaded title deeds & their AI reports</td><td>parcelId, storageUrl, sha256, aiReport (JSON string)</td></tr>
+        <tr><td><strong>TransferMeta</strong></td><td>Mirror of on-chain transfers</td><td>id (=transferId), parcelId, seller, buyer, status, newDocumentHash</td></tr>
+        <tr><td><strong>FraudAlert</strong></td><td>AI-generated fraud warnings</td><td>parcelId, type (DOUBLE_SALE etc.), severity (LOW/MED/HIGH), detail</td></tr>
+        <tr><td><strong>AuditLog</strong></td><td>Immutable log of every action</td><td>actor, action, target, meta (JSON)</td></tr>
+        <tr><td><strong>ChainEvent</strong></td><td>Simulator's blockchain event log</td><td>parcelId, transferId, type, fromAddr, toAddr, txHash, blockNum</td></tr>
+        <tr><td><strong>SimParcel</strong></td><td>Simulator's parcel state</td><td>Mirrors the on-chain Parcel struct in SQLite</td></tr>
+        <tr><td><strong>SimTransfer</strong></td><td>Simulator's transfer state</td><td>Mirrors the on-chain TransferRequest struct in SQLite</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================== SECTION 6 ============================== -->
+<div class="container page-break" id="s6">
+  <div class="section">
+    <h2><span class="num">06</span> The Simulator</h2>
+    <p>The file <code>web/src/lib/simulator.ts</code> is our hackathon secret weapon.</p>
+
+    <h3>Why Do We Need It?</h3>
+    <p>A real Ethereum blockchain requires running <code>npx hardhat node</code> in a terminal. If that terminal crashes during a demo to judges, our entire app breaks. The Simulator eliminates this risk by <strong>faking the blockchain entirely inside SQLite</strong>.</p>
+
+    <h3>How It Works</h3>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-content"><p>Every chain function (e.g., <code>getParcel()</code>) first calls <code>shouldUseSimulator()</code></p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-content"><p>If no Hardhat node is running OR no contract address is set → Simulator mode activates</p></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-content"><p>Instead of talking to the blockchain, the function reads/writes from <code>SimParcel</code> and <code>SimTransfer</code> tables in SQLite</p></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-content"><p>Every simulated action also creates a <code>ChainEvent</code> row — so the timeline history works identically</p></div></div>
+
+    <div class="card card-blue">
+      <div class="card-title">✨ The Brilliance</div>
+      <p style="margin:0; font-size:0.85rem">From the user's perspective, the app looks and behaves identically whether it's running against a real blockchain or the simulator. The UI doesn't know the difference.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 7 ============================== -->
+<div class="container page-break" id="s7">
+  <div class="section">
+    <h2><span class="num">07</span> API Reference</h2>
+    <p>All backend endpoints live inside <code>web/src/app/api/</code>. Every response follows the envelope format: <code>{ ok: true, data: ... }</code> on success, <code>{ ok: false, error: "..." }</code> on failure.</p>
+
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge-sm badge-green">GET</span></td><td><code>/api/parcels</code></td><td>List all parcels. Supports <code>?q=</code>, <code>?owner=</code>, <code>?district=</code> filters</td></tr>
+        <tr><td><span class="badge-sm badge-green">GET</span></td><td><code>/api/parcels/[id]</code></td><td>Get full details of one parcel (chain data + DB metadata + document + history)</td></tr>
+        <tr><td><span class="badge-sm badge-blue">POST</span></td><td><code>/api/parcels</code></td><td>Create/update parcel metadata in the database</td></tr>
+        <tr><td><span class="badge-sm badge-green">GET</span></td><td><code>/api/transfers</code></td><td>List transfers. <code>?wallet=</code> and <code>?role=REGISTRAR</code> filters</td></tr>
+        <tr><td><span class="badge-sm badge-blue">POST</span></td><td><code>/api/transfers/mirror</code></td><td>Mirror a chain transfer into the database + trigger fraud scan</td></tr>
+        <tr><td><span class="badge-sm badge-blue">POST</span></td><td><code>/api/chain</code></td><td>The mega-endpoint. Accepts <code>action</code>: register, initiate, buyerApprove, registrarFinalize, reject</td></tr>
+        <tr><td><span class="badge-sm badge-green">GET</span></td><td><code>/api/chain</code></td><td>Returns current mode: "simulator" or "hardhat"</td></tr>
+        <tr><td><span class="badge-sm badge-blue">POST</span></td><td><code>/api/upload</code></td><td>Upload a document file. Returns <code>{ url, sha256 }</code></td></tr>
+        <tr><td><span class="badge-sm badge-blue">POST</span></td><td><code>/api/ai/verify-doc</code></td><td>Run AI forgery analysis on a document. Returns <code>AiReport</code></td></tr>
+        <tr><td><span class="badge-sm badge-green">GET</span></td><td><code>/api/fraud</code></td><td>List all fraud alerts. <code>?resolved=true</code> filter</td></tr>
+        <tr><td><span class="badge-sm badge-blue">POST</span></td><td><code>/api/fraud/scan</code></td><td>Manually trigger fraud scan for a transfer or parcel</td></tr>
+        <tr><td><span class="badge-sm badge-green">GET</span></td><td><code>/api/certificate/[id]</code></td><td>Generate a downloadable title certificate PDF for a parcel</td></tr>
+        <tr><td><span class="badge-sm badge-blue">POST</span></td><td><code>/api/sync</code></td><td>Trigger database seeding (inserts demo data)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The Chain Action API — The Heart of Everything</h3>
+    <p>The <code>POST /api/chain</code> endpoint is the central nervous system. It accepts an <code>action</code> field that tells it what to do:</p>
+    <div class="code-block">POST /api/chain
+{
+  "action": "initiate",        // or "buyerApprove", "registrarFinalize", "reject", "register"
+  "seller": "0x70997...",
+  "parcelId": 1,
+  "buyer": "0x3C44C...",
+  "newDocumentHash": "0xabc..."
+}</div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 8 ============================== -->
+<div class="container page-break" id="s8">
+  <div class="section">
+    <h2><span class="num">08</span> Key Library Functions</h2>
+    <p>These are the shared utility files inside <code>web/src/lib/</code> that power the entire application:</p>
+
+    <div class="card">
+      <div class="card-title">📁 chain.ts — Blockchain Interface</div>
+      <p style="font-size:0.85rem"><code>getParcel(id)</code> → fetch a parcel from chain/simulator<br>
+      <code>ownerOf(id)</code> → who owns this parcel?<br>
+      <code>initiateTransfer(signer, parcelId, buyer, docHash)</code> → start a sale<br>
+      <code>buyerApprove(signer, transferId)</code> → buyer signs approval<br>
+      <code>registrarFinalize(signer, transferId)</code> → government finalizes<br>
+      <code>getHistory(parcelId)</code> → full timeline of events for a parcel</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📁 wallet.ts — MetaMask Connection</div>
+      <p style="font-size:0.85rem"><code>connectWallet()</code> → prompts MetaMask, returns wallet address + signer<br>
+      <code>ensureCorrectNetwork()</code> → auto-switches MetaMask to chain 31337<br>
+      <code>shortenAddress("0x1234...abcd")</code> → returns "0x1234…abcd"</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📁 hash.ts — Cryptographic Hashing</div>
+      <p style="font-size:0.85rem"><code>sha256(file)</code> → computes the SHA-256 hash of any file, returns "0x..." string<br>
+      <code>hashesMatch(a, b)</code> → compares two hashes (ignoring 0x prefix casing)</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📁 fraud.ts — Fraud Detection Engine</div>
+      <p style="font-size:0.85rem"><code>scanTransfer(transferId)</code> → checks for ownership mismatch, forged documents<br>
+      <code>scanParcel(parcelId)</code> → checks for double-sale attempts<br>
+      <code>buildAiReport(sha256, onChainHash)</code> → generates AI forensic report</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📁 api-client.ts — Frontend API Wrapper</div>
+      <p style="font-size:0.85rem">The <code>bhumiApi</code> object wraps all API calls with TypeScript types:<br>
+      <code>bhumiApi.getParcels()</code>, <code>bhumiApi.getTransfers()</code>, <code>bhumiApi.chainAction()</code>, <code>bhumiApi.uploadDocument()</code>, <code>bhumiApi.scanFraud()</code>, etc.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📁 seed.ts — Demo Data Generator</div>
+      <p style="font-size:0.85rem"><code>ensureSeeded()</code> → on first API call, auto-inserts 3 demo parcels + 1 demo transfer + demo users<br>
+      <code>mergeParcelWithMeta(id)</code> → combines simulator chain data with DB metadata into a single object</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 9 ============================== -->
+<div class="container page-break" id="s9">
+  <div class="section">
+    <h2><span class="num">09</span> UI Navigation Guide</h2>
+    <p>Here is every page in the application and what it does:</p>
+
+    <h3>🏠 Public Pages (No Login Required)</h3>
+
+    <div class="card">
+      <div class="card-title">/ — Landing Page</div>
+      <p style="font-size:0.85rem; margin:0">The homepage with a 3D hero animation, project pitch, and navigation links. Shows what BhoomiChain is about.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">/verify — Public Search</div>
+      <p style="font-size:0.85rem; margin:0">Anyone can search for a land parcel by survey number, district, or ULPIN. No login needed. Displays a list of matching parcels.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-title">/verify/[id] — Verification Certificate</div>
+      <p style="font-size:0.85rem; margin:0">The crown jewel. Shows a verified ownership certificate for any parcel: current owner, survey details, blockchain status, QR code, ownership timeline, and optional AI document integrity report. Data comes directly from the blockchain (or simulator).</p>
+    </div>
+
+    <h3>👤 Citizen Portal (Requires Wallet Connection)</h3>
+
+    <div class="card">
+      <div class="card-title">/portal/parcels — My Parcels</div>
+      <p style="font-size:0.85rem; margin:0">Shows all land parcels owned by the connected wallet address. Each parcel displays as a card with survey number, district, area, and status. Click to view details. Has a "Connect Wallet" prompt if MetaMask isn't connected.</p>
+    </div>
+    <div class="card card-orange">
+      <div class="card-title">/portal/transfer — Initiate Transfer (Seller Page)</div>
+      <p style="font-size:0.85rem; margin:0"><strong>Step 1 of the workflow.</strong> The seller enters a parcel ID and the buyer's wallet address, then clicks "Initiate Transfer". This locks the parcel and creates a transfer request on-chain. Shows transfer progress with a timeline.</p>
+    </div>
+    <div class="card card-blue">
+      <div class="card-title">/portal/approvals — Buyer Approvals</div>
+      <p style="font-size:0.85rem; margin:0"><strong>Step 2 of the workflow.</strong> Shows all transfers where the connected wallet is the buyer and the status is "PendingBuyer". The buyer can click "Review & Sign" to approve.</p>
+    </div>
+
+    <h3>🏛️ Registrar Dashboard (Government Officials)</h3>
+
+    <div class="card">
+      <div class="card-title">/dashboard — Fraud War-Room</div>
+      <p style="font-size:0.85rem; margin:0">The main registrar dashboard. Shows KPI tiles (chain mode, total parcels, pending transfers, network ID), live fraud alerts feed, and an interactive district map showing parcel locations.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">/dashboard/register — Register New Parcel</div>
+      <p style="font-size:0.85rem; margin:0">Form to mint a new land NFT: survey number, district, coordinates, area, owner wallet, optional ULPIN, and document upload. Only registrars should use this.</p>
+    </div>
+    <div class="card card-green">
+      <div class="card-title">/dashboard/transfers — Transfer Queue</div>
+      <p style="font-size:0.85rem; margin:0"><strong>Step 3 of the workflow.</strong> Shows all transfers with status "PendingRegistrar". The registrar can run an AI integrity check on the document, then click "Finalize on Chain" to complete the ownership transfer.</p>
+    </div>
+
+    <h3>⚙️ Admin Page</h3>
+    <div class="card">
+      <div class="card-title">/admin — Role Management</div>
+      <p style="font-size:0.85rem; margin:0">Admin page to grant or revoke the REGISTRAR_ROLE to wallet addresses.</p>
+    </div>
+
+    <h3>🧭 Navigation Bar Links</h3>
+    <p>The top navbar (<code>Navbar</code> component) provides links to: Home, Verify, Citizen Portal (My Parcels, Transfer, Approvals), and Dashboard (War-Room, Register, Transfers).</p>
+  </div>
+</div>
+
+<!-- ============================== SECTION 10 ============================== -->
+<div class="container page-break" id="s10">
+  <div class="section">
+    <h2><span class="num">10</span> The Complete Transfer Workflow</h2>
+    <p>This is the core feature of BhoomiChain. Here's exactly what happens when land changes hands:</p>
+
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-content">
+        <h4>Seller Initiates Transfer</h4>
+        <p>The seller goes to <code>/portal/transfer</code>, enters the parcel ID and buyer's wallet address, and clicks "Initiate Transfer".</p>
+        <p><strong>What happens behind the scenes:</strong></p>
+        <ul>
+          <li>The frontend calls <code>POST /api/chain</code> with <code>action: "initiate"</code></li>
+          <li>The simulator verifies: Is this person the owner? Is the parcel Active (not already in a transfer)?</li>
+          <li>If valid, it creates a <code>SimTransfer</code> record with status <span class="badge-sm badge-orange">PendingBuyer</span></li>
+          <li>The parcel status changes from "Active" to "InTransfer" (blocks double-selling)</li>
+          <li>A <code>ChainEvent</code> of type "INITIATED" is created</li>
+          <li>A <code>TransferMeta</code> row is created in the database</li>
+          <li>The fraud engine runs <code>scanTransfer()</code> to check for anomalies</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-content">
+        <h4>Buyer Reviews and Approves</h4>
+        <p>The buyer goes to <code>/portal/approvals</code> and sees the pending request.</p>
+        <ul>
+          <li>Clicking "Review & Sign" calls <code>POST /api/chain</code> with <code>action: "buyerApprove"</code></li>
+          <li>The simulator verifies: Is this the designated buyer? Is status PendingBuyer?</li>
+          <li>Status changes to <span class="badge-sm badge-blue">PendingRegistrar</span></li>
+          <li>A <code>ChainEvent</code> of type "APPROVED" is created</li>
+        </ul>
+        <p><em>If the buyer rejects:</em> Status changes to <span class="badge-sm badge-red">Rejected</span> and the parcel goes back to Active.</p>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-content">
+        <h4>Registrar Verifies and Finalizes</h4>
+        <p>The government registrar goes to <code>/dashboard/transfers</code>.</p>
+        <ul>
+          <li>They can click "Run AI Integrity Check" to analyze the uploaded document for forgery</li>
+          <li>If the document is flagged as LIKELY_FORGED (risk score ≥ 70), the system blocks finalization</li>
+          <li>If clean, clicking "Finalize on Chain" calls <code>POST /api/chain</code> with <code>action: "registrarFinalize"</code></li>
+          <li>The simulator: marks the transfer as <span class="badge-sm badge-green">Completed</span></li>
+          <li>The simulator: changes the parcel's <code>ownerWallet</code> to the buyer</li>
+          <li>The simulator: updates the parcel's <code>documentHash</code> to the new document</li>
+          <li>The simulator: sets parcel status back to "Active"</li>
+          <li>A <code>ChainEvent</code> of type "TRANSFERRED" is created</li>
+          <li><code>ParcelMeta.ownerWallet</code> is updated in the database</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card card-green">
+      <div class="card-title">✅ After Completion</div>
+      <p style="margin:0; font-size:0.85rem">The buyer is now the legal owner. If anyone visits <code>/verify/[id]</code>, they'll see the buyer as the current owner, with the complete ownership history showing the transfer event.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 11 ============================== -->
+<div class="container page-break" id="s11">
+  <div class="section">
+    <h2><span class="num">11</span> Security & Fraud Detection</h2>
+
+    <h3>Smart Contract Security</h3>
+    <ul>
+      <li><strong>Role-Based Access Control</strong> — Only registrars can register parcels and finalize transfers. Only owners can initiate sales. Only designated buyers can approve.</li>
+      <li><strong>Anti-Bypass</strong> — Standard NFT transfer functions (<code>transferFrom</code>) are permanently disabled. The ONLY way to move ownership is through the multi-party workflow.</li>
+      <li><strong>Double-Sale Prevention</strong> — When a transfer starts, the parcel status changes to "InTransfer". No second transfer can be initiated on the same parcel.</li>
+      <li><strong>State Machine Enforcement</strong> — The transfer must go through PendingBuyer → PendingRegistrar → Completed in order. You can't skip steps.</li>
+    </ul>
+
+    <h3>Fraud Detection Engine</h3>
+    <p>The file <code>web/src/lib/fraud.ts</code> implements automated fraud scanning:</p>
+
+    <table>
+      <thead><tr><th>Fraud Type</th><th>What It Detects</th><th>Severity</th></tr></thead>
+      <tbody>
+        <tr><td><code>DOUBLE_SALE</code></td><td>Attempting to sell a parcel that already has an active transfer</td><td><span class="badge-sm badge-red">HIGH</span></td></tr>
+        <tr><td><code>OWNERSHIP_MISMATCH</code></td><td>The person initiating the transfer is not the actual on-chain owner</td><td><span class="badge-sm badge-red">HIGH</span></td></tr>
+        <tr><td><code>FORGED_DOC</code></td><td>The AI analysis flagged the uploaded document as likely forged</td><td><span class="badge-sm badge-red">HIGH</span></td></tr>
+        <tr><td><code>RAPID_FLIP</code></td><td>The same parcel changing hands suspiciously fast (future implementation)</td><td><span class="badge-sm badge-orange">MED</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="card card-orange">
+      <div class="card-title">🛡️ How Scanning is Triggered</div>
+      <p style="margin:0; font-size:0.85rem">Every time a transfer is initiated or mirrored to the database, <code>scanTransfer()</code> runs automatically. It checks ownership, looks for active transfers on the same parcel, and analyzes any uploaded documents. Alerts appear in the Registrar's Fraud War-Room dashboard in real-time.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 12 ============================== -->
+<div class="container page-break" id="s12">
+  <div class="section">
+    <h2><span class="num">12</span> AI Document Verification</h2>
+    <p>The endpoint <code>POST /api/ai/verify-doc</code> analyzes uploaded land title documents for signs of tampering.</p>
+
+    <h3>How It Works</h3>
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-content"><p>A document is uploaded via <code>POST /api/upload</code>. Its SHA-256 hash is computed and stored.</p></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-content"><p>The registrar clicks "Run AI Integrity Check" on the transfer queue page.</p></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-content"><p>The system compares the document's hash against the on-chain <code>documentHash</code>. If they don't match → instant <span class="badge-sm badge-red">LIKELY_FORGED</span> verdict.</p></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-content"><p>If hashes match, a forensic analysis checks for: font consistency, seal integrity, digital artifacts, and numeral tampering.</p></div></div>
+
+    <h3>The AiReport Object</h3>
+    <div class="code-block">{
+  "hashMatch": true,          // Does the file hash match on-chain anchor?
+  "sha256": "0xabc...",       // SHA-256 fingerprint of the document
+  "riskScore": 18,            // 0 = safe, 100 = definitely forged
+  "verdict": "LIKELY_GENUINE", // or "SUSPICIOUS" or "LIKELY_FORGED"
+  "indicators": {
+    "fontConsistency": "Consistent",
+    "sealIntegrity": "Intact",
+    "digitalArtifacts": "None detected",
+    "numeralTampering": "None detected"
+  },
+  "reasons": ["No significant forgery indicators detected"],
+  "model": "bhumitrust-forensic-v1"
+}</div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 13 ============================== -->
+<div class="container page-break" id="s13">
+  <div class="section">
+    <h2><span class="num">13</span> Environment Variables</h2>
+    <p>These are configured in <code>web/.env</code> and <code>web/.env.local</code>:</p>
+
+    <table>
+      <thead><tr><th>Variable</th><th>Purpose</th><th>Example Value</th></tr></thead>
+      <tbody>
+        <tr><td><code>NEXT_PUBLIC_CHAIN_RPC</code></td><td>URL of the blockchain node</td><td>http://127.0.0.1:8545</td></tr>
+        <tr><td><code>NEXT_PUBLIC_CHAIN_ID</code></td><td>Network identifier</td><td>31337 (Hardhat local)</td></tr>
+        <tr><td><code>NEXT_PUBLIC_CONTRACT_ADDRESS</code></td><td>Deployed smart contract address</td><td>0x5FbDB2315...</td></tr>
+        <tr><td><code>NEXT_PUBLIC_APP_URL</code></td><td>Base URL for QR codes & links</td><td>http://localhost:3000</td></tr>
+        <tr><td><code>DATABASE_URL</code></td><td>Database connection string</td><td>file:./prisma/dev.db</td></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>Supabase project URL</td><td>https://xxx.supabase.co</td></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>Supabase public key (safe for frontend)</td><td>eyJhbG...</td></tr>
+        <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>Supabase admin key (server only!)</td><td>eyJhbG...</td></tr>
+        <tr><td><code>GEMINI_API_KEY</code></td><td>Google Gemini AI key</td><td>AQ.Ab8RN6...</td></tr>
+        <tr><td><code>DEMO_FORCE_REPORT</code></td><td>Force demo AI report (true/false)</td><td>false</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================== SECTION 14 ============================== -->
+<div class="container page-break" id="s14">
+  <div class="section">
+    <h2><span class="num">14</span> Folder Structure</h2>
+    <div class="code-block">hello-world/
+├── contracts/                    # Blockchain layer
+│   ├── contracts/
+│   │   └── LandRegistry.sol      # The smart contract
+│   ├── scripts/
+│   │   └── seed.js               # Chain seeding script
+│   ├── test/
+│   │   └── LandRegistry.test.js  # Contract tests
+│   └── hardhat.config.cjs        # Hardhat configuration
+│
+├── web/                          # Full-stack Next.js app
+│   ├── prisma/
+│   │   ├── schema.prisma         # Database schema definition
+│   │   ├── dev.db                # SQLite database file
+│   │   └── seed.js               # Database seeding script
+│   │
+│   ├── src/
+│   │   ├── app/                  # Next.js App Router pages
+│   │   │   ├── page.tsx          # Landing page (/)
+│   │   │   ├── layout.tsx        # Root layout (navbar, fonts)
+│   │   │   ├── globals.css       # Global styles + Tailwind
+│   │   │   ├── verify/           # Public verification pages
+│   │   │   ├── portal/           # Citizen pages (parcels, transfer, approvals)
+│   │   │   ├── dashboard/        # Registrar pages (war-room, register, transfers)
+│   │   │   ├── admin/            # Admin role management
+│   │   │   └── api/              # Backend API route handlers
+│   │   │       ├── parcels/      # GET/POST /api/parcels
+│   │   │       ├── transfers/    # GET /api/transfers, POST /api/transfers/mirror
+│   │   │       ├── chain/        # POST /api/chain (the mega-endpoint)
+│   │   │       ├── upload/       # POST /api/upload
+│   │   │       ├── ai/           # POST /api/ai/verify-doc
+│   │   │       ├── fraud/        # GET /api/fraud, POST /api/fraud/scan
+│   │   │       ├── certificate/  # GET /api/certificate/[id]
+│   │   │       └── sync/         # POST /api/sync
+│   │   │
+│   │   ├── components/           # Reusable React components
+│   │   │   ├── Navbar.tsx        # Top navigation bar
+│   │   │   ├── Footer.tsx        # Page footer
+│   │   │   ├── ParcelCard.tsx    # Parcel display card
+│   │   │   ├── QrCode.tsx        # QR code generator
+│   │   │   ├── FraudFeed.tsx     # Live fraud alert feed
+│   │   │   ├── FraudMap.tsx      # Interactive district map
+│   │   │   ├── OwnershipTimeline.tsx  # Chain event timeline
+│   │   │   └── ...more components
+│   │   │
+│   │   └── lib/                  # Shared utility libraries
+│   │       ├── chain.ts          # Blockchain interface
+│   │       ├── simulator.ts      # SQLite-backed chain simulator
+│   │       ├── wallet.ts         # MetaMask connection
+│   │       ├── fraud.ts          # Fraud detection engine
+│   │       ├── hash.ts           # SHA-256 hashing
+│   │       ├── db.ts             # Prisma client singleton
+│   │       ├── seed.ts           # Demo data seeder
+│   │       ├── storage.ts        # File upload handler
+│   │       ├── types.ts          # Shared TypeScript types
+│   │       ├── api-client.ts     # Frontend API wrapper
+│   │       ├── api-utils.ts      # ok() / fail() response helpers
+│   │       └── contract-abi.json # Smart contract ABI
+│   │
+│   ├── .env                      # Environment variables
+│   └── .env.local                # Local overrides
+│
+└── docs/                         # Project documentation
+    ├── INTERFACE_CONTRACT.md     # THE LAW — all shared names/types/shapes
+    └── PARALLEL_WORKFLOW.md      # How 3 devs work in parallel</div>
+  </div>
+</div>
+
+<!-- ============================== SECTION 15 ============================== -->
+<div class="container page-break" id="s15">
+  <div class="section">
+    <h2><span class="num">15</span> Glossary of Terms</h2>
+
+    <table>
+      <thead><tr><th>Term</th><th>Simple Explanation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Blockchain</strong></td><td>A digital ledger that records transactions. Once written, data cannot be changed or deleted. Think of it as an indestructible diary.</td></tr>
+        <tr><td><strong>Smart Contract</strong></td><td>A program that runs on the blockchain. It executes automatically when conditions are met. Our <code>LandRegistry.sol</code> is a smart contract.</td></tr>
+        <tr><td><strong>NFT (ERC-721)</strong></td><td>A unique digital token. Each land parcel is represented as one NFT. The token cannot be duplicated — there's only one of each.</td></tr>
+        <tr><td><strong>Wallet Address</strong></td><td>A unique identifier (like a bank account number) for a blockchain user. Looks like <code>0x70997970C518...</code></td></tr>
+        <tr><td><strong>MetaMask</strong></td><td>A browser extension that acts as your blockchain wallet. It stores your private keys and lets you sign transactions.</td></tr>
+        <tr><td><strong>Signer</strong></td><td>An object in ethers.js that represents a wallet capable of signing (authorizing) transactions.</td></tr>
+        <tr><td><strong>SHA-256</strong></td><td>A cryptographic hash function. It takes any input (a file, text) and produces a unique 64-character fingerprint. If even one byte changes, the fingerprint is completely different.</td></tr>
+        <tr><td><strong>Parcel</strong></td><td>A piece of land. In our system, each parcel has a unique ID, survey number, location, area, and owner.</td></tr>
+        <tr><td><strong>ULPIN</strong></td><td>Unique Land Parcel Identification Number — a government-assigned 14-digit ID for each plot of land in India.</td></tr>
+        <tr><td><strong>Survey Number</strong></td><td>A local identifier assigned by the revenue department to each piece of land within a village/district.</td></tr>
+        <tr><td><strong>Prisma</strong></td><td>A tool that lets us interact with the database using TypeScript code instead of writing raw SQL queries.</td></tr>
+        <tr><td><strong>SQLite</strong></td><td>A lightweight database stored as a single file (<code>dev.db</code>). No server needed.</td></tr>
+        <tr><td><strong>Simulator</strong></td><td>Our custom code that pretends to be a blockchain. It stores data in SQLite tables instead of a real Ethereum node.</td></tr>
+        <tr><td><strong>ABI</strong></td><td>Application Binary Interface — a JSON file that tells our JavaScript code how to talk to the smart contract.</td></tr>
+        <tr><td><strong>Hardhat</strong></td><td>A development tool for Ethereum. It compiles Solidity code, runs tests, and can spin up a local blockchain for testing.</td></tr>
+        <tr><td><strong>Gas</strong></td><td>The "fee" paid to execute a transaction on the blockchain. On our local Hardhat node, gas is free.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================== FOOTER ============================== -->
+<div class="footer-doc">
+  <p><strong>BhoomiChain</strong> — Blockchain-Powered Land Registry</p>
+  <p>Digital India Hackathon 2026 · Team Documentation · Generated July 10, 2026</p>
+  <p style="margin-top: 0.5rem">To save as PDF: Press <strong>Ctrl + P</strong> → Destination: "Save as PDF" → Save</p>
+</div>
+
+</body>
+</html>

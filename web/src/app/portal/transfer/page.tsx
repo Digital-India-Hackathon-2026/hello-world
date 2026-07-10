@@ -22,9 +22,9 @@ function TransferContent() {
   const [blockReason, setBlockReason] = useState("");
   const [buyerWallet, setBuyerWallet] = useState(DEMO_WALLETS.buyer);
   const [transferId, setTransferId] = useState<number | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [loadingParcel, setLoadingParcel] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     const id = searchParams.get("parcelId");
@@ -58,12 +58,10 @@ function TransferContent() {
 
     setSubmitting(true);
     try {
-      let newDocumentHash = "0x" + "e".repeat(64);
+      let documentHash = "0x" + "e".repeat(64);
       if (file) {
-        const uploadRes = await bhumiApi.uploadDocument(file, id);
-        if (uploadRes.sha256) {
-          newDocumentHash = uploadRes.sha256;
-        }
+        const upload = await bhumiApi.uploadDocument(file, id);
+        documentHash = upload.sha256;
       }
 
       const seller = (await connectWallet().catch(() => null))?.address ?? DEMO_WALLETS.seller;
@@ -72,7 +70,7 @@ function TransferContent() {
         seller,
         parcelId: id,
         buyer: buyerWallet,
-        newDocumentHash,
+        newDocumentHash: documentHash,
       });
       setTransferId(result.transferId ?? null);
       await bhumiApi.scanFraud({ transferId: result.transferId, parcelId: id });
@@ -137,19 +135,20 @@ function TransferContent() {
                 </div>
 
                 <div className="mt-6">
-                  <label className="metric-label" htmlFor="title-document">Title Document (Sale Deed)</label>
+                  <label className="metric-label" htmlFor="title-deed">New Title Deed (PDF/Image)</label>
                   <input
-                    id="title-document"
+                    id="title-deed"
                     type="file"
-                    accept="application/pdf"
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    accept="image/*,.pdf"
+                    onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                     className="gov-input mt-2"
                   />
+                  <p className="text-xs text-gov-muted mt-1">This document will be analyzed by AI for fraud detection.</p>
                 </div>
 
                 <button
                   onClick={handleSubmit}
-                  disabled={!parcelId || submitting || parcel?.status === "InTransfer"}
+                  disabled={!parcelId || !file || submitting || parcel?.status === "InTransfer"}
                   className="gov-btn-primary mt-8 flex items-center gap-2 disabled:opacity-40"
                 >
                   {submitting ? "Initiating on blockchain…" : "Initiate Transfer"} <ArrowRight className="w-4 h-4" />

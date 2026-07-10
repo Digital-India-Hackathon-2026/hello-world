@@ -76,7 +76,7 @@ export default function ApprovalsPage() {
                   Seller {shortenAddress(t.seller)} → You
                 </p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <button
                   onClick={() => approve(t.id)}
                   disabled={loading === t.id}
@@ -85,11 +85,24 @@ export default function ApprovalsPage() {
                   {loading === t.id ? "Signing…" : "Review & Sign"}
                 </button>
                 <button
-                  onClick={() => reject(t.id)}
+                  onClick={async () => {
+                    const reason = prompt("Enter reason for rejection:");
+                    if (!reason) return;
+                    setLoading(t.id);
+                    try {
+                      const addr = wallet || (await connectWallet()).address;
+                      await bhumiApi.chainAction({ action: "reject", actor: addr, transferId: t.id, reason });
+                      await load(addr);
+                    } catch (e) {
+                      alert(e instanceof Error ? e.message : "Rejection failed");
+                    } finally {
+                      setLoading(null);
+                    }
+                  }}
                   disabled={loading === t.id}
-                  className="gov-btn-danger text-sm disabled:opacity-40 bg-red-600 text-white px-4 py-2 rounded font-medium"
+                  className="px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md font-semibold text-sm disabled:opacity-40 transition-colors"
                 >
-                  {loading === t.id ? "Rejecting…" : "Reject"}
+                  Reject
                 </button>
               </div>
             </div>

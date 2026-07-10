@@ -114,11 +114,28 @@ export default function DashboardTransfersPage() {
                   {loading === t.id ? "Finalizing…" : "Finalize on Chain"}
                 </button>
                 <button
-                  onClick={() => reject(t.id)}
+                  onClick={async () => {
+                    const reason = prompt("Enter reason for rejection:");
+                    if (!reason) return;
+                    setLoading(t.id);
+                    try {
+                      await bhumiApi.chainAction({
+                        action: "reject",
+                        actor: DEMO_WALLETS.registrar,
+                        transferId: t.id,
+                        reason
+                      });
+                      load();
+                    } catch (e) {
+                      alert(e instanceof Error ? e.message : "Rejection failed");
+                    } finally {
+                      setLoading(null);
+                    }
+                  }}
                   disabled={loading === t.id || t.status !== "PendingRegistrar"}
-                  className="gov-btn-danger text-sm disabled:opacity-40 bg-red-600 text-white px-4 py-2 rounded font-medium"
+                  className="px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-md font-semibold text-sm disabled:opacity-40 transition-colors"
                 >
-                  {loading === t.id ? "Rejecting…" : "Reject Transfer"}
+                  Reject Transfer
                 </button>
               </div>
             </div>
