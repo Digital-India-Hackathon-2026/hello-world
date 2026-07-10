@@ -1,65 +1,74 @@
-import hre from "hardhat";
+const hre = require("hardhat");
+
+const DEMO_PARCELS = [
+  {
+    ownerIndex: 1,
+    surveyNumber: "142/2A",
+    district: "Medak",
+    geo: "17.75,78.05",
+    area: 8094,
+    documentHash: "0x" + "a".repeat(64),
+    ulpin: "29KA0482017452",
+  },
+  {
+    ownerIndex: 2,
+    surveyNumber: "89/B",
+    district: "Pune",
+    geo: "18.52,73.85",
+    area: 111,
+    documentHash: "0x" + "b".repeat(64),
+    ulpin: "27MH1234056789",
+  },
+  {
+    ownerIndex: 3,
+    surveyNumber: "145/1",
+    district: "Medak",
+    geo: "17.76,78.06",
+    area: 6070,
+    documentHash: "0x" + "c".repeat(64),
+    ulpin: "29KA0482017453",
+  },
+];
 
 async function main() {
-  const signers = await hre.ethers.getSigners();
-  // Use deterministic Hardhat accounts
-  const registrar = signers[1];
-  const citizen1 = signers[2];
-  const citizen2 = signers[3];
-  const citizen3 = signers[4];
+  const [deployer, seller, buyer, owner3] = await hre.ethers.getSigners();
+  const address = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
-  console.log("Deploying fresh LandRegistry for seeding...");
-  const LandRegistry = await hre.ethers.getContractFactory("LandRegistry");
-  const landRegistry = await LandRegistry.deploy();
-  await landRegistry.waitForDeployment();
-  const address = await landRegistry.getAddress();
-  
-  console.log("✅ LandRegistry deployed to:", address);
-
-  const REGISTRAR_ROLE = await landRegistry.REGISTRAR_ROLE();
-  await landRegistry.grantRole(REGISTRAR_ROLE, registrar.address);
-  console.log("✅ Granted REGISTRAR_ROLE to:", registrar.address);
-
-  const parcelsData = [
-    { owner: citizen1.address, surveyNumber: "MH-PUN-101", district: "Pune-Maharashtra", geo: "18.5204,73.8567", area: 2500 },
-    { owner: citizen2.address, surveyNumber: "TG-RAN-202", district: "Rangareddy-Telangana", geo: "17.3850,78.4867", area: 4500 },
-    { owner: citizen3.address, surveyNumber: "KA-BLR-303", district: "Bengaluru Urban-Karnataka", geo: "12.9716,77.5946", area: 1200 },
-    { owner: citizen1.address, surveyNumber: "MH-PUN-104", district: "Pune-Maharashtra", geo: "18.5210,73.8570", area: 3000 },
-    { owner: citizen2.address, surveyNumber: "TG-RAN-205", district: "Rangareddy-Telangana", geo: "17.3860,78.4870", area: 5500 },
-    { owner: citizen3.address, surveyNumber: "KA-BLR-306", district: "Bengaluru Urban-Karnataka", geo: "12.9720,77.5950", area: 1800 },
-    { owner: citizen1.address, surveyNumber: "MH-PUN-107", district: "Pune-Maharashtra", geo: "18.5220,73.8580", area: 4000 },
-    { owner: citizen2.address, surveyNumber: "TG-RAN-208", district: "Rangareddy-Telangana", geo: "17.3870,78.4880", area: 6500 }
-  ];
-
-  const summary = [];
-
-  console.log("\nRegistering 8 parcels on-chain...");
-  for (let i = 0; i < parcelsData.length; i++) {
-    const p = parcelsData[i];
-    const docHash = hre.ethers.id(`doc-${i}`); // mock sha256 bytes32
-    
-    const tx = await landRegistry.connect(registrar).registerParcel(
-      p.owner, p.surveyNumber, p.district, p.geo, p.area, docHash
-    );
-    const receipt = await tx.wait();
-    
-    // Find ParcelRegistered event to extract the precise ID
-    let parcelId = i + 1;
-    for (const log of receipt.logs) {
-      try {
-        const parsed = landRegistry.interface.parseLog(log);
-        if (parsed && parsed.name === 'ParcelRegistered') {
-          parcelId = Number(parsed.args[0]);
-        }
-      } catch (e) {}
-    }
-    
-    summary.push({ parcelId, owner: p.owner, surveyNumber: p.surveyNumber });
+  let registry;
+  if (address) {
+    registry = await hre.ethers.getContractAt("LandRegistry", address);
+  } else {
+    const LandRegistry = await hre.ethers.getContractFactory("LandRegistry");
+    registry = await LandRegistry.deploy();
+    await registry.waitForDeployment();
+    console.log("Deployed for seed:", await registry.getAddress());
   }
 
-  console.table(summary);
-  console.log("\n🎉 Chain seed completed!");
-  console.log("Run the Prisma seed separately to populate the DB.");
+  const owners = [deployer, seller, buyer, owner3];
+  const parcelIds = [];
+
+  for (const p of DEMO_PARCELS) {
+    const tx = await registry.registerParcel(
+      owners[p.ownerIndex].address,
+      p.surveyNumber,
+      p.district,
+      p.geo,
+      p.area,
+      p.documentHash
+    );
+    const receipt = await tx.wait();
+    const event = receipt.logs.find((l) => l.fragment?.name === "ParcelRegistered");
+    const parcelId = Number(event.args.parcelId);
+    parcelIds.push({ parcelId, ulpin: p.ulpin });
+    console.log(`Registered parcel ${parcelId} (${p.ulpin}) → ${owners[p.ownerIndex].address}`);
+  }
+
+  console.log("\nDemo wallets:");
+  console.log("Registrar/Admin:", deployer.address);
+  console.log("Seller:", seller.address);
+  console.log("Buyer:", buyer.address);
+  console.log("Owner3:", owner3.address);
+  console.log("\nParcel mapping:", JSON.stringify(parcelIds));
 }
 
 main().catch((error) => {

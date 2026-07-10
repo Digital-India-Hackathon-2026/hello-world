@@ -1,35 +1,49 @@
-import hre from "hardhat";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const hre = require("hardhat");
+const fs = require("fs");
+const path = require("path");
 
 async function main() {
   const LandRegistry = await hre.ethers.getContractFactory("LandRegistry");
-  const landRegistry = await LandRegistry.deploy();
+  const registry = await LandRegistry.deploy();
+  await registry.waitForDeployment();
+  const address = await registry.getAddress();
 
-  await landRegistry.waitForDeployment();
-
-  const address = await landRegistry.getAddress();
   console.log("LandRegistry deployed to:", address);
 
-  // Copy ABI to web/lib/contract-abi.json
-  const artifactPath = path.join(__dirname, "../artifacts/contracts/LandRegistry.sol/LandRegistry.json");
-  const artifact = JSON.parse(fs.readFileSync(artifactPath, "utf-8"));
-  const webLibDir = path.join(__dirname, "../../web/lib");
-  
-  if (!fs.existsSync(webLibDir)) {
-    fs.mkdirSync(webLibDir, { recursive: true });
+  const artifact = await hre.artifacts.readArtifact("LandRegistry");
+  const abiPath = path.join(__dirname, "../../web/src/lib/contract-abi.json");
+  fs.writeFileSync(abiPath, JSON.stringify(artifact.abi, null, 2));
+
+  const envExamplePath = path.join(__dirname, "../../web/.env.local.example");
+  let envContent = "";
+  if (fs.existsSync(envExamplePath)) {
+    envContent = fs.readFileSync(envExamplePath, "utf8");
+    if (envContent.includes("NEXT_PUBLIC_CONTRACT_ADDRESS=")) {
+      envContent = envContent.replace(
+        /NEXT_PUBLIC_CONTRACT_ADDRESS=.*/,
+        `NEXT_PUBLIC_CONTRACT_ADDRESS=${address}`
+      );
+    } else {
+      envContent += `\nNEXT_PUBLIC_CONTRACT_ADDRESS=${address}\n`;
+    }
+    fs.writeFileSync(envExamplePath, envContent);
   }
 
-  fs.writeFileSync(
-    path.join(webLibDir, "contract-abi.json"),
-    JSON.stringify(artifact.abi, null, 2)
-  );
-
-  console.log("ABI copied to web/lib/contract-abi.json");
+  const envLocalPath = path.join(__dirname, "../../web/.env.local");
+  if (fs.existsSync(envLocalPath)) {
+    let local = fs.readFileSync(envLocalPath, "utf8");
+    if (local.includes("NEXT_PUBLIC_CONTRACT_ADDRESS=")) {
+      local = local.replace(/NEXT_PUBLIC_CONTRACT_ADDRESS=.*/, `NEXT_PUBLIC_CONTRACT_ADDRESS=${address}`);
+    } else {
+      local += `\nNEXT_PUBLIC_CONTRACT_ADDRESS=${address}\n`;
+    }
+    fs.writeFileSync(envLocalPath, local);
+  } else {
+    fs.writeFileSync(
+      envLocalPath,
+      `NEXT_PUBLIC_CHAIN_RPC=http://127.0.0.1:8545\nNEXT_PUBLIC_CHAIN_ID=31337\nNEXT_PUBLIC_CONTRACT_ADDRESS=${address}\nNEXT_PUBLIC_APP_URL=http://localhost:3000\nDATABASE_URL=file:./prisma/dev.db\nDEMO_FORCE_REPORT=false\n`
+    );
+  }
 }
 
 main().catch((error) => {
