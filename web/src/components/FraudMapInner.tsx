@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
-import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Popup, useMap, Polygon } from "react-leaflet";
+import L from "leaflet";
 import type { Parcel } from "@/lib/types";
 import "leaflet/dist/leaflet.css";
 
@@ -56,6 +57,21 @@ function MapLocationControl() {
       </button>
     </div>
   );
+}
+
+function MapBoundsUpdater({ parcels }: { parcels: Parcel[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (parcels.length > 0) {
+      const bounds = L.latLngBounds(parcels.map(p => {
+        const [lat, lng] = p.geo.split(",").map(Number);
+        return [lat, lng];
+      }));
+      // Pad bounds slightly so markers aren't on the edge
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
+    }
+  }, [parcels, map]);
+  return null;
 }
 
 export default function FraudMapInner({ parcels }: { parcels: Parcel[] }) {
@@ -127,12 +143,24 @@ export default function FraudMapInner({ parcels }: { parcels: Parcel[] }) {
         {filteredParcels.map((p) => {
           const [lat, lng] = p.geo.split(",").map(Number);
           const color = p.status === "InTransfer" ? "#FF9933" : "#138808";
+          
+          // Calculate an artificial boundary based on area. 1 degree lat = ~364,000 ft.
+          const side = Math.sqrt(p.area);
+          const dLat = Math.max(side / 364000, 0.0005) / 2; // minimum 0.0005 degrees to remain visible
+          const dLng = Math.max(side / (364000 * Math.cos(lat * Math.PI / 180)), 0.0005) / 2;
+
+          const positions: [number, number][] = [
+            [lat - dLat, lng - dLng],
+            [lat + dLat, lng - dLng],
+            [lat + dLat, lng + dLng],
+            [lat - dLat, lng + dLng],
+          ];
+
           return (
-            <CircleMarker
+            <Polygon
               key={p.id}
-              center={[lat, lng]}
-              radius={10}
-              pathOptions={{ color, fillColor: color, fillOpacity: 0.7 }}
+              positions={positions}
+              pathOptions={{ color, fillColor: color, fillOpacity: 0.7, weight: 2 }}
             >
               <Popup>
                 <div style={{
@@ -179,9 +207,10 @@ export default function FraudMapInner({ parcels }: { parcels: Parcel[] }) {
                   </div>
                 </div>
               </Popup>
-            </CircleMarker>
+            </Polygon>
           );
         })}
+        <MapBoundsUpdater parcels={filteredParcels} />
         <MapLocationControl />
       </MapContainer>
 
